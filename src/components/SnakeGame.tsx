@@ -138,16 +138,12 @@ export default function SnakeGame() {
         y: head.y + dirRef.current.y,
       };
 
-      // Check wall collision
-      if (
-        newHead.x < 0 ||
-        newHead.x >= GRID_SIZE ||
-        newHead.y < 0 ||
-        newHead.y >= GRID_SIZE
-      ) {
-        setGameOver(true);
-        return;
-      }
+      // Wrap around walls
+      if (newHead.x < 0) newHead.x = GRID_SIZE - 1;
+      else if (newHead.x >= GRID_SIZE) newHead.x = 0;
+      
+      if (newHead.y < 0) newHead.y = GRID_SIZE - 1;
+      else if (newHead.y >= GRID_SIZE) newHead.y = 0;
 
       // Check self collision
       if (
@@ -254,17 +250,17 @@ export default function SnakeGame() {
       </div>
 
       {/* Game Canvas Container */}
-      <div className="relative p-1 bg-neon-magenta screen-tear">
+      <div className="relative screen-tear border-[8px] border-solid border-neon-magenta">
         <canvas
           ref={canvasRef}
           width={CANVAS_SIZE}
           height={CANVAS_SIZE}
-          className="bg-black block border-2 border-neon-cyan"
+          className="bg-black block"
         />
         
         {/* Overlays */}
         {(!hasStarted || gameOver || isPaused) && (
-          <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-10 border-2 border-neon-cyan m-1">
+          <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-10">
             {!hasStarted && !gameOver && (
               <>
                 <h2 className="glitch text-2xl font-pixel text-white mb-8 uppercase" data-text="BOOT_SEQUENCE">
